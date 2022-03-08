@@ -1,8 +1,12 @@
 package es.udc.intelligentsystems.example;
 
 import es.udc.intelligentsystems.*;
+import org.w3c.dom.NodeList;
 
+import java.sql.Array;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Strategy4 implements SearchStrategy {
 
@@ -10,36 +14,58 @@ public class Strategy4 implements SearchStrategy {
     }
 
     @Override
-    public State solve(SearchProblem p) throws Exception{
-        ArrayList<State> explored = new ArrayList<State>();
+    public Node[] solve(SearchProblem p) throws Exception{
+        //ArrayList<State> explored = new ArrayList<>();
+        ArrayList<Node> explored = new ArrayList<>();
         State currentState = p.getInitialState();
-        explored.add(currentState);
+        Node currentNode = new Node(currentState,null,null);
+        explored.add(currentNode);
 
         int i = 1;
 
-        System.out.println((i++) + " - Starting search at " + currentState);
+        System.out.println((i++) + " - Starting search at " + currentNode.state);
 
-        while (!p.isGoal(currentState)){
-            System.out.println((i++) + " - " + currentState + " is not a goal");
-            Action[] availableActions = p.actions(currentState);
+        while (!p.isGoal(currentNode.state)){
+
+            System.out.println((i++) + " - " + currentNode.state + " is not a goal");
+            Action[] availableActions = p.actions(currentNode.state);
             boolean modified = false;
+
             for (Action acc: availableActions) {
-                State sc = p.result(currentState, acc);
-                System.out.println((i++) + " - RESULT(" + currentState + ","+ acc + ")=" + sc);
-                if (!explored.contains(sc)) {
-                    currentState = sc;
-                    System.out.println((i++) + " - " + sc + " NOT explored");
-                    explored.add(currentState);
+                Node nc = new Node(p.result(currentNode.state, acc),currentNode,acc);
+
+                System.out.println((i++) + " - RESULT(" + currentNode.state + ","+ acc + ")=" + nc.state);
+
+                if (!explored.contains(nc)) {
+                    //currentState = sc;
+                    currentNode = nc;
+                    System.out.println((i++) + " - " + nc.state + " NOT explored");
+                    explored.add(currentNode);
                     modified = true;
-                    System.out.println((i++) + " - Current state changed to " + currentState);
+                    System.out.println((i++) + " - Current state changed to " + nc.state);
                     break;
                 }
                 else
-                    System.out.println((i++) + " - " + sc + " already explored");
+                    System.out.println((i++) + " - " + nc.state + " already explored");
             }
             if (!modified) throw new Exception("No solution could be found");
         }
-        System.out.println((i++) + " - END - " + currentState);
-        return currentState;
+        System.out.println((i++) + " - END - " + currentNode.state);
+
+        return reconstruct_sol(currentNode);
     }
+    private Node[] reconstruct_sol(Node n){
+        List<Node> nodelist = new ArrayList<>();
+        Node currentNode = n;
+
+        while (currentNode!=null){
+            nodelist.add(currentNode);
+            currentNode = currentNode.parent;
+        }
+
+        Collections.reverse(nodelist);
+
+        return nodelist.toArray(new Node[0]);
+    }
+
 }
