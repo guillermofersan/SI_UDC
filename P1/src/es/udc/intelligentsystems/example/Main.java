@@ -13,7 +13,7 @@ public class Main {
                                                                                                     VacuumCleanerProblem.VacuumCleanerState.DirtPosition.BOTH);
         SearchProblem aspiradora = new VacuumCleanerProblem(initialState);
 
-        SearchStrategy buscador = new Strategy4();
+        SearchStrategy buscador = new GraphSearchStrategy();
         System.out.println(Arrays.toString(buscador.solve(aspiradora)));
     }
 }

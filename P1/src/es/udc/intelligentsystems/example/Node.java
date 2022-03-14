@@ -31,8 +31,14 @@ public class Node {
 
     @Override
     public String toString() {
+
+        String act;
+        if (action==null)
+            act = "none";
+        else act = action.toString();
+
         return "Node{" +
                 "state=" + state +
-                ", action=" + action +'}';
+                ", action=" + act +'}';
     }
 }

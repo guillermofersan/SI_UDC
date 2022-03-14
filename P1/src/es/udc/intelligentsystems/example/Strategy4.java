@@ -15,7 +15,7 @@ public class Strategy4 implements SearchStrategy {
 
     @Override
     public Node[] solve(SearchProblem p) throws Exception{
-        //ArrayList<State> explored = new ArrayList<>();
+
         ArrayList<Node> explored = new ArrayList<>();
         State currentState = p.getInitialState();
         Node currentNode = new Node(currentState,null,null);
