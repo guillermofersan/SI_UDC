@@ -1,12 +1,10 @@
-package es.udc.intelligentsystems.example;
+package es.udc.intelligentsystems;
 
-import es.udc.intelligentsystems.*;
+import es.udc.intelligentsystems.example.Node;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
-public class GraphSearchStrategy implements SearchStrategy {
-
+public class BreadthFirstSearch implements SearchStrategy{
 
     @Override
     public Node[] solve(SearchProblem p) throws Exception {
@@ -23,7 +21,7 @@ public class GraphSearchStrategy implements SearchStrategy {
         int i = 1;
 
         System.out.println((i++) + " - Starting search at " + currentState);
-        
+
         while (true){
 
             if (frontier.isEmpty()){ //If you reach nothing in the frontier, you have not found any solution
@@ -49,10 +47,10 @@ public class GraphSearchStrategy implements SearchStrategy {
             }
         }
         System.out.println((i++) + "- End " + currentNode.state);
-    return reconstruct_sol(currentNode);
+        return reconstruct_sol(currentNode);
     }
-    
-    
+
+
     public Queue<Node> successors (SearchProblem p, Queue<Node> frontier, Node currentnode, List<Node> explored){
         System.out.println("Expanding frontier:");
         Action[] availableActions = p.actions(p.getInitialState());
@@ -64,9 +62,10 @@ public class GraphSearchStrategy implements SearchStrategy {
         for(Action acc : availableActions){
 
             if(acc.isApplicable(currentnode.state)) { //Looks if the action is applicable to the current state
-                //st = p.result(currentnode.state, acc);
+
                 nd = new Node(p.result(currentnode.state, acc),currentnode,acc);
-                System.out.println("\t-" + (i++) + " - RESULT(" + nd.state + "," + acc + ") = " + nd.state);
+                //System.out.printf(nd.state.toString());
+                System.out.println("\t-" + (i++) + " - RESULT(" + currentnode.state + "," + acc + ") = " + nd.state);
 
                 if (!explored.contains(nd)) { //Checks if it has been already explored
                     System.out.println("\t-" + (i++) + " - " + nd.state + " NOT explored");
@@ -104,5 +103,5 @@ public class GraphSearchStrategy implements SearchStrategy {
     }
 
 
-}
 
+}

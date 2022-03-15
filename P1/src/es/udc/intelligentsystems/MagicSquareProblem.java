@@ -1,6 +1,7 @@
 package es.udc.intelligentsystems;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,13 +9,14 @@ public class MagicSquareProblem extends SearchProblem{
 
     public static class MagicSquareState extends State {
 
-        private List<List<Integer>> square;
+        private int[][] square;
+
         private int size;
         private int magicNum;
 
-        public MagicSquareState(List<List<Integer>> square) {
+        public MagicSquareState(int[][] square) {
             this.square = square;
-            this.size = square.size();
+            this.size = square.length;
             this.magicNum = (int) (size*(Math.pow(size,2)+1))/2;
         }
 
@@ -23,19 +25,14 @@ public class MagicSquareProblem extends SearchProblem{
 
             StringBuilder string = new StringBuilder("[ Magic square " + size + "x" + size + " ]\n");
 
-            for (List<Integer> integers : square) {
+
+            for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    string.append(" ").append(integers.get(j)).append(" ");
+
+                    string.append(" [").append(square[i][j]).append("] ");
                 }
                 string.append("\n");
             }
-            /*
-            for (int i = 0; i < size; i++) {
-                for (int j = 0; j < size; j++) {
-                    string.append(square.get(i*size+j));
-                }
-            }
-             */
 
             return string.toString();
         }
@@ -46,12 +43,12 @@ public class MagicSquareProblem extends SearchProblem{
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             MagicSquareState that = (MagicSquareState) o;
-            return square.equals(that.square);
+            return Arrays.deepEquals(square, that.square);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(square);
+            return Arrays.deepHashCode(square);
         }
     }
 
@@ -77,12 +74,12 @@ public class MagicSquareProblem extends SearchProblem{
 
             MagicSquareState msSt = (MagicSquareState) st;
             int size = msSt.size;
-            if (!(row<size && col<size && number>0 && number<=msSt.magicNum && msSt.square.get(row).get(col)==0))
+            if (!(row<size && col<size && number>0 && number<=msSt.magicNum && msSt.square[row][col]==0))
                 return false;
 
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if(msSt.square.get(i).get(j)==number)
+                    if(msSt.square[row][col]==number)
                         return false;
                 }
             }
@@ -93,13 +90,20 @@ public class MagicSquareProblem extends SearchProblem{
         @Override
         public State applyTo(State st) {
             MagicSquareState msSt = (MagicSquareState) st;
+            int size = msSt.size;
+            int[][] square = new int[size][size];
 
-            List<Integer> aux = msSt.square.get(row);
-            aux.set(col, number);
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    if(i==row && j==col){
+                        square[i][j]=number;
+                    } else{
+                        square[i][j]=msSt.square[i][j];
+                    }
+                }
+            }
 
-            msSt.square.set(row,aux);
-
-            return null;
+            return new MagicSquareState(square);
         }
     }
 
@@ -110,27 +114,32 @@ public class MagicSquareProblem extends SearchProblem{
     @Override
     public boolean isGoal(State st) {
         MagicSquareState msSt = (MagicSquareState) st;
-        List<List<Integer>> square = msSt.square;
+        int[][] square = msSt.square;
         int size = msSt.size;
 
         int diag1 = 0, diag2=0; //sum of the diagonals
         for (int i = 0; i < size; i++) {
-            diag1 += square.get(i).get(i);
-            diag2 += square.get(i).get(size-1-i);
+            diag1 += square[i][i];
+            diag2 += square[i][size-1-i];
+
         }
+        //System.out.println(diag1 + "   " + diag2 + "   " + msSt.magicNum);
 
         if(diag1!=diag2 || diag1!=msSt.magicNum)
             return false;
 
-        int sumrow = 0, sumcol = 0;
+
 
         for (int i = 0; i < size; i++) {
+            int sumrow = 0, sumcol = 0;
             for (int j = 0; j < size; j++) {
-                int aux = square.get(i).get(j);
-                if (aux<0 || aux>(size*size));
+                int aux = square[i][j];
+                if (aux<0 || aux>(size*size))
+                    return false;
                 sumrow += aux;
-                sumcol += square.get(j).get(i);
+                sumcol += square[j][i];
             }
+
             if (sumrow != sumcol || sumrow != diag1)
                 return false;
         }
@@ -150,10 +159,12 @@ public class MagicSquareProblem extends SearchProblem{
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 for (int k = 1; k <= magicnum; k++) {
-                    act = new MagicSquareAction(i,j,magicnum);
+                    act = new MagicSquareAction(i,j,k);
 
-                    if (act.isApplicable(st))
-                        actionlist.add(act);
+                    if (act.isApplicable(st)){
+                        actionlist.add(new MagicSquareAction(i,j,k));
+                    }
+
                 }
             }
         }

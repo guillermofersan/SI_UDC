@@ -6,9 +6,9 @@ import java.util.Objects;
 
 public class Node {
 
-    State state;
-    Node parent;
-    Action action;
+    public State state;
+    public Node parent;
+    public Action action;
 
     public Node(State state, Node parent, Action action) {
         this.state = state;
