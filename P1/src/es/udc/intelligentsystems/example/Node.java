@@ -1,6 +1,7 @@
 package es.udc.intelligentsystems.example;
 
-import es.udc.intelligentsystems.*;
+import es.udc.intelligentsystems.Action;
+import es.udc.intelligentsystems.State;
 
 import java.util.Objects;
 
@@ -37,8 +38,7 @@ public class Node {
             act = "none";
         else act = action.toString();
 
-        return "Node{" +
-                "state=" + state +
-                ", action=" + act +'}';
+        return "State: " + state +
+                "Action= " + act + "\n";
     }
 }

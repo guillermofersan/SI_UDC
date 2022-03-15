@@ -1,8 +1,10 @@
 package es.udc.intelligentsystems.example;
 
-import es.udc.intelligentsystems.*;
+import es.udc.intelligentsystems.Action;
+import es.udc.intelligentsystems.SearchProblem;
+import es.udc.intelligentsystems.SearchStrategy;
+import es.udc.intelligentsystems.State;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 public class GraphSearchStrategy implements SearchStrategy {

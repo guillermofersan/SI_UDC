@@ -1,9 +1,10 @@
 package es.udc.intelligentsystems.example;
 
-import es.udc.intelligentsystems.*;
-import org.w3c.dom.NodeList;
+import es.udc.intelligentsystems.Action;
+import es.udc.intelligentsystems.SearchProblem;
+import es.udc.intelligentsystems.SearchStrategy;
+import es.udc.intelligentsystems.State;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

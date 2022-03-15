@@ -1,11 +1,6 @@
 package es.udc.intelligentsystems;
 
-import es.udc.intelligentsystems.example.GraphSearchStrategy;
-import es.udc.intelligentsystems.example.VacuumCleanerProblem;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class Main {
 
@@ -13,21 +8,21 @@ public class Main {
 
         int[][] matrix={
                 {4,9,2},
-                {3,5,0},
+                {0,5,0},
                 {0,1,0}
         };
 
-        int[][] sol={
-                {4,9,2},
-                {3,5,7},
-                {8,1,6}
+        int[][] m2={
+                {2,0,0},
+                {0,0,0},
+                {0,0,0}
         };
 
 
         System.out.println("Estado inicial");
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                System.out.print(" [" + sol[i][j] + "] ");
+                System.out.print(" [" + matrix[i][j] + "] ");
             }
             System.out.print("\n");
         }
@@ -36,15 +31,15 @@ public class Main {
 
 
         MagicSquareProblem.MagicSquareState initialState = new MagicSquareProblem.MagicSquareState(matrix);
-        MagicSquareProblem.MagicSquareState solution = new MagicSquareProblem.MagicSquareState(sol);
+        //MagicSquareProblem.MagicSquareState solution = new MagicSquareProblem.MagicSquareState(sol);
         SearchProblem magicSquare = new MagicSquareProblem(initialState);
         SearchStrategy searcher = new BreadthFirstSearch();
+        SearchStrategy searcher2 = new DepthFirstSearch();
 
-        //System.out.println(Arrays.toString(magicSquare.actions(initialState)));
 
-        //System.out.println(magicSquare.isGoal(solution));
 
-        System.out.println("\n\n\n" + Arrays.toString(searcher.solve(magicSquare)));
+        //System.out.println("\n\n\n" + Arrays.toString(searcher.solve(magicSquare)));
+        System.out.println("\n\n\n" + Arrays.toString(searcher2.solve(magicSquare)));
 
 
     }

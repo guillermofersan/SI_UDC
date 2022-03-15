@@ -3,7 +3,6 @@ package es.udc.intelligentsystems.example;
 import es.udc.intelligentsystems.SearchStrategy;
 import es.udc.intelligentsystems.SearchProblem;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Main {

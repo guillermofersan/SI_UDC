@@ -4,12 +4,12 @@ import es.udc.intelligentsystems.example.Node;
 
 import java.util.*;
 
-public class BreadthFirstSearch implements SearchStrategy{
+public class DepthFirstSearch implements SearchStrategy{
 
     @Override
     public Node[] solve(SearchProblem p) throws Exception {
 
-        Queue<Node> frontier = new LinkedList<>();
+        Stack<Node> frontier = new Stack<>();
         List<Node> explored = new ArrayList<>();
 
         Node parent = null;
@@ -27,7 +27,7 @@ public class BreadthFirstSearch implements SearchStrategy{
             if (frontier.isEmpty()){ //If you reach nothing in the frontier, you have not found any solution
                 throw new Exception("Could not find any solution");
             }  else{  //You poll the Queue (frontier), and pick the first element
-                currentNode = frontier.poll();
+                currentNode = frontier.pop();
             }
 
 
@@ -51,7 +51,7 @@ public class BreadthFirstSearch implements SearchStrategy{
     }
 
 
-    public Queue<Node> successors (SearchProblem p, Queue<Node> frontier, Node currentnode, List<Node> explored){
+    public Stack<Node> successors (SearchProblem p, Stack<Node> frontier, Node currentnode, List<Node> explored){
         System.out.println("Expanding frontier: {");
         Action[] availableActions = p.actions(p.getInitialState());
         State st;
@@ -102,6 +102,7 @@ public class BreadthFirstSearch implements SearchStrategy{
         Collections.reverse(nodelist);
         return nodelist.toArray(new Node[0]);
     }
+
 
 
 

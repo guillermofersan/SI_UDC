@@ -3,7 +3,6 @@ package es.udc.intelligentsystems;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class MagicSquareProblem extends SearchProblem{
 
@@ -23,7 +22,7 @@ public class MagicSquareProblem extends SearchProblem{
         @Override
         public String toString() {
 
-            StringBuilder string = new StringBuilder("[ Magic square " + size + "x" + size + " ]\n");
+            StringBuilder string = new StringBuilder("\n"); //[ Magic square " + size + "x" + size + " ]
 
 
             for (int i = 0; i < size; i++) {
@@ -123,7 +122,6 @@ public class MagicSquareProblem extends SearchProblem{
             diag2 += square[i][size-1-i];
 
         }
-        //System.out.println(diag1 + "   " + diag2 + "   " + msSt.magicNum);
 
         if(diag1!=diag2 || diag1!=msSt.magicNum)
             return false;
@@ -158,7 +156,7 @@ public class MagicSquareProblem extends SearchProblem{
 
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                for (int k = 1; k <= magicnum; k++) {
+                for (int k = 1; k <= (size*size); k++) {
                     act = new MagicSquareAction(i,j,k);
 
                     if (act.isApplicable(st)){
