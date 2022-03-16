@@ -53,7 +53,7 @@ public class DepthFirstSearch implements SearchStrategy{
 
     public Stack<Node> successors (SearchProblem p, Stack<Node> frontier, Node currentnode, List<Node> explored){
         System.out.println("Expanding frontier: {");
-        Action[] availableActions = p.actions(p.getInitialState());
+        Action[] availableActions = p.actions(currentnode.state);
         State st;
         Node nd;
 

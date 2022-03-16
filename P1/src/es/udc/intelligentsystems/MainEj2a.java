@@ -2,13 +2,13 @@ package es.udc.intelligentsystems;
 
 import java.util.Arrays;
 
-public class Main {
+public class MainEj2a {
 
     public static void main(String[] args) throws Exception {
 
         int[][] matrix={
                 {4,9,2},
-                {0,5,0},
+                {3,5,0},
                 {0,1,0}
         };
 
@@ -38,8 +38,8 @@ public class Main {
 
 
 
-        //System.out.println("\n\n\n" + Arrays.toString(searcher.solve(magicSquare)));
-        System.out.println("\n\n\n" + Arrays.toString(searcher2.solve(magicSquare)));
+        System.out.println("\n\n\n" + Arrays.toString(searcher.solve(magicSquare)));
+        //System.out.println("\n\n\n" + Arrays.toString(searcher2.solve(magicSquare)));
 
 
     }

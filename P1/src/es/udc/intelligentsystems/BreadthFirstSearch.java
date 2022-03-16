@@ -53,8 +53,7 @@ public class BreadthFirstSearch implements SearchStrategy{
 
     public Queue<Node> successors (SearchProblem p, Queue<Node> frontier, Node currentnode, List<Node> explored){
         System.out.println("Expanding frontier: {");
-        Action[] availableActions = p.actions(p.getInitialState());
-        State st;
+        Action[] availableActions = p.actions(currentnode.state);
         Node nd;
 
         int i=0;
@@ -102,7 +101,5 @@ public class BreadthFirstSearch implements SearchStrategy{
         Collections.reverse(nodelist);
         return nodelist.toArray(new Node[0]);
     }
-
-
 
 }

@@ -5,7 +5,7 @@ import es.udc.intelligentsystems.SearchProblem;
 
 import java.util.Arrays;
 
-public class Main {
+public class MainEj1 {
 
     public static void main(String[] args) throws Exception {
         VacuumCleanerProblem.VacuumCleanerState initialState = new VacuumCleanerProblem.VacuumCleanerState(VacuumCleanerProblem.VacuumCleanerState.RobotPosition.LEFT,
