@@ -84,12 +84,16 @@ public class MagicSquareProblem extends SearchProblem{
                 }
             }
 
+            int aux;
 
-            // comprobaciones extra
             for (int i = 0; i < size; i++) {
                 int sumrow = 0, sumcol = 0;
+
                 for (int j = 0; j < size; j++) {
-                    int aux = msSt.square[i][j];
+                    if (i==row && j==col){
+                        aux = number;
+                    } else aux = msSt.square[i][j];
+
                     if (aux<0 || aux>(size*size))
                         return false;
                     sumrow += aux;
@@ -99,9 +103,6 @@ public class MagicSquareProblem extends SearchProblem{
                 if (sumrow > msSt.magicNum || sumcol > msSt.magicNum)
                     return false;
             }
-
-
-
 
             return true;
         }
@@ -196,10 +197,10 @@ public class MagicSquareProblem extends SearchProblem{
                     for (int k = 1; k <= (size*size); k++) {
                         act = new MagicSquareAction(i,j,k);
                         if (act.isApplicable(msSt)){
+
                             actionlist.add(act);
                         }
                     }
-
                     return actionlist.toArray(new Action[0]);
                 }
 

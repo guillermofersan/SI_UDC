@@ -16,15 +16,12 @@ public class GraphSearchStrategy implements SearchStrategy {
         Queue<Node> frontier = new LinkedList<>();
         List<Node> explored = new ArrayList<>();
 
-        Node parent = null;
         Node currentNode;
-        Action acc = null;
         State currentState = p.getInitialState();
-        frontier.add(new Node(currentState, parent, acc));
+        frontier.add(new Node(currentState, null, null));
+        int i=0;
 
-        int i = 1;
-
-        System.out.println((i++) + " - Starting search at " + currentState);
+        System.out.println((++i) + "-" + currentState);
         
         while (true){
 
@@ -36,27 +33,25 @@ public class GraphSearchStrategy implements SearchStrategy {
 
 
             if(p.isGoal(currentNode.state)){  //If it is goal, end
-                System.out.println((i++) + "- " + currentNode.state + "is goal");
                 break;
             } else{  //If not goal, add to explored, and update frontier with the successors function
-                System.out.println((i++) + "- " + currentNode.state + " is not goal");
+                System.out.println(currentNode);
                 explored.add(currentNode);
                 frontier = successors(p, frontier, currentNode, explored);
 
                 if (!frontier.isEmpty()){
                     currentNode=frontier.peek(); //cambiamos al state siguiente para printearlo
-                    System.out.println((i++) + "- Actual state changed to " + currentNode.state);
+                    System.out.println((++i) + "-" + currentNode.state);
                 }
 
             }
         }
-        System.out.println((i++) + "- End " + currentNode.state);
+        System.out.println("\n" + (++i) + "- End " + currentNode.state);
     return reconstruct_sol(currentNode);
     }
     
     
     public Queue<Node> successors (SearchProblem p, Queue<Node> frontier, Node currentnode, List<Node> explored){
-        System.out.println("Expanding frontier:");
         Action[] availableActions = p.actions(p.getInitialState());
         State st;
         Node nd;
@@ -66,27 +61,13 @@ public class GraphSearchStrategy implements SearchStrategy {
         for(Action acc : availableActions){
 
             if(acc.isApplicable(currentnode.state)) { //Looks if the action is applicable to the current state
-                //st = p.result(currentnode.state, acc);
+
                 nd = new Node(p.result(currentnode.state, acc),currentnode,acc);
-                System.out.println("\t-" + (i++) + " - RESULT(" + nd.state + "," + acc + ") = " + nd.state);
 
                 if (!explored.contains(nd)) { //Checks if it has been already explored
-                    System.out.println("\t-" + (i++) + " - " + nd.state + " NOT explored");
-                    boolean isinFrontier = false;
-
-                    for (Node node : frontier) {
-                        if (node.equals(nd)) {
-                            isinFrontier = true;
-                            break;
-                        }
-                    }
-
-                    if (!isinFrontier) { //adds the node to the frontier if it was not there
-                        System.out.println("\t-" + (i++) + " - " + nd.state + " NOT in the frontier");
+                    if (!frontier.contains(nd)) { //adds the node to the frontier if it was not there
                         frontier.add(nd);
                     }
-                }else{
-                    System.out.println("\t-" +(i++) + " - " + currentnode.state + " already explored");
                 }
             }
         }
