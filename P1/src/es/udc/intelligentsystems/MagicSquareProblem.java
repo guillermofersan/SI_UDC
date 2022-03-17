@@ -8,10 +8,10 @@ public class MagicSquareProblem extends SearchProblem{
 
     public static class MagicSquareState extends State {
 
-        private int[][] square;
+        public int[][] square;
 
-        private int size;
-        private int magicNum;
+        public int size;
+        public int magicNum;
 
         public MagicSquareState(int[][] square) {
             this.square = square;
@@ -76,12 +76,32 @@ public class MagicSquareProblem extends SearchProblem{
             if (!(row<size && col<size && number>0 && number<=msSt.magicNum && msSt.square[row][col]==0))
                 return false;
 
+
             for (int i = 0; i < size; i++) {
                 for (int j = 0; j < size; j++) {
-                    if(msSt.square[row][col]==number)
+                    if(msSt.square[i][j]==number)
                         return false;
                 }
             }
+
+
+            // comprobaciones extra
+            for (int i = 0; i < size; i++) {
+                int sumrow = 0, sumcol = 0;
+                for (int j = 0; j < size; j++) {
+                    int aux = msSt.square[i][j];
+                    if (aux<0 || aux>(size*size))
+                        return false;
+                    sumrow += aux;
+                    sumcol += msSt.square[j][i];
+                }
+
+                if (sumrow > msSt.magicNum || sumcol > msSt.magicNum)
+                    return false;
+            }
+
+
+
 
             return true;
         }
@@ -120,13 +140,10 @@ public class MagicSquareProblem extends SearchProblem{
         for (int i = 0; i < size; i++) {
             diag1 += square[i][i];
             diag2 += square[i][size-1-i];
-
         }
 
         if(diag1!=diag2 || diag1!=msSt.magicNum)
             return false;
-
-
 
         for (int i = 0; i < size; i++) {
             int sumrow = 0, sumcol = 0;
@@ -149,11 +166,13 @@ public class MagicSquareProblem extends SearchProblem{
         MagicSquareState msSt = (MagicSquareState) st;
 
         int size = msSt.size;
-        int magicnum = msSt.magicNum;
 
         List<Action> actionlist = new ArrayList<>();
+
+
         Action act;
 
+        /*
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 for (int k = 1; k <= (size*size); k++) {
@@ -167,8 +186,26 @@ public class MagicSquareProblem extends SearchProblem{
             }
         }
 
+         */
+
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+
+                if (msSt.square[i][j]==0){
+
+                    for (int k = 1; k <= (size*size); k++) {
+                        act = new MagicSquareAction(i,j,k);
+                        if (act.isApplicable(msSt)){
+                            actionlist.add(act);
+                        }
+                    }
+
+                    return actionlist.toArray(new Action[0]);
+                }
+
+            }
+        }
+
         return actionlist.toArray(new Action[0]);
     }
-
-
 }

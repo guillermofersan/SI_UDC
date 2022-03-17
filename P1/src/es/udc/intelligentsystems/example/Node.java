@@ -12,7 +12,8 @@ public class Node implements Comparable<Node>{
     public Node parent;
     public Action action;
     public float pathcost;
-    public Float totalcost;
+    public float totalcost;
+    public float h;
 
     public Node(State state, Node parent, Action action) {
         this.state = state;
@@ -26,11 +27,13 @@ public class Node implements Comparable<Node>{
         this.action = action;
 
         if (this.action==null)
-            pathcost=0;
+            pathcost = (float) 0;
         else
-            pathcost+=action.getCost();
+            pathcost=action.getCost() + parent.pathcost;
 
-        totalcost = pathcost + h.evaluate(this.state);
+        this.h = h.evaluate(this.state);
+        totalcost = pathcost + this.h;
+
     }
 
     @Override
@@ -59,6 +62,6 @@ public class Node implements Comparable<Node>{
 
     @Override
     public int compareTo(Node node) {
-        return this.totalcost.compareTo(node.totalcost);
+        return  (int) (node.h - this.h);
     }
 }

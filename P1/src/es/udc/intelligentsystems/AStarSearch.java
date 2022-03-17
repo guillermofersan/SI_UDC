@@ -9,67 +9,57 @@ public class AStarSearch implements InformedSearchStrategy{
 
     @Override
     public State solve(SearchProblem p, Heuristic h) throws Exception {
-        PriorityQueue<Node> frontier = new PriorityQueue<>();
+        Queue<Node> frontier = new PriorityQueue<>();
         List<Node> explored = new ArrayList<>();
 
-        Node parent = null;
-        Node currentNode;
-        Action acc = null;
-        State currentState = p.getInitialState();
-        frontier.add(new Node(currentState, parent, acc, h));
+        Node currentNode = new Node(p.getInitialState(), null, null, h);
+
+        frontier.offer(currentNode);
 
         int i = 0;
 
-        System.out.println((++i) + " - Starting search at " + currentState);
+        System.out.println((++i) + " - Starting search at " + currentNode.state);
 
-        while (true){
+        while(!frontier.isEmpty()){
+            currentNode = frontier.poll();
 
-            if (frontier.isEmpty()){ //If you reach nothing in the frontier, you have not found any solution
-                throw new Exception("Could not find any solution");
-            }  else{  //You poll the Queue (frontier), and pick the first element
-                currentNode = frontier.poll();
+            if (p.isGoal(currentNode.state)){
+                return currentNode.state;
             }
 
+            explored.add(currentNode);
+            System.out.println(currentNode);
 
-            if(p.isGoal(currentNode.state)){  //If it is goal, end
-                System.out.println("is goal");
-                break;
-            } else{  //If not goal, add to explored, and update frontier with the successors function
-                System.out.println(" is not goal");
-                explored.add(currentNode);
+            Action[] availActions = p.actions(currentNode.state);
 
-                //frontier = successors(p, frontier, currentNode, explored);
-                List<Node> aux = successors(p, currentNode, h);
-                for (Node n: aux) {
-                    if (explored.contains(n)){
-                        continue;
-                    } else if (frontier.contains(n)) {
-                        //Node node = null; //Obtain the node from the frontier which state is equal to n.state
+            for (Action acc: availActions) {
 
-                        Node node = null;
+                State s = p.result(currentNode.state,acc);
+                Node auxnode = new Node(s, currentNode, acc,h);
+                if (!explored.contains(auxnode)){
+                    if (!frontier.contains(auxnode)){
+                        frontier.offer(auxnode);
 
-                        for (Node auxn:frontier) {
-                            if (auxn.equals(n)){
-                                node = auxn;
-                                break;
-                            }
-                        }
-                        if(node.totalcost>n.totalcost){
-                            frontier.remove(node);
-                        } else continue;
+                    } else{
+                        Node aux = extractNode(auxnode,frontier);
+                        frontier.remove(aux);
+                        frontier.offer(auxnode);
                     }
-                    frontier.add(n);
-                }
-
-                if (!frontier.isEmpty()){
-                    currentNode=frontier.peek(); //cambiamos al state siguiente para printearlo
-                    System.out.println((++i) + " Actual state changed to " + currentNode.state);
                 }
             }
         }
-        System.out.println((++i) + "- End " + currentNode.state);
-        //return reconstruct_sol(currentNode);
-        return currentNode.state;
+
+
+         throw new Exception("Not solution found");
+    }
+
+    private Node extractNode(Node n, Queue<Node> frontier) throws Exception {
+        for (Node aux : frontier) {
+            if (aux.equals(n)){
+                return aux;
+            }
+        }
+        throw new Exception("Error");
     }
 
 
