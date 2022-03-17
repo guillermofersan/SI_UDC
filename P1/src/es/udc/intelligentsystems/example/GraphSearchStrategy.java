@@ -23,17 +23,13 @@ public class GraphSearchStrategy implements SearchStrategy {
 
         System.out.println((++i) + "-" + currentState);
         
-        while (true){
+        while (!frontier.isEmpty()){
 
-            if (frontier.isEmpty()){ //If you reach nothing in the frontier, you have not found any solution
-                throw new Exception("Could not find any solution");
-            }  else{  //You poll the Queue (frontier), and pick the first element
-                currentNode = frontier.poll();
-            }
-
+            currentNode = frontier.poll();
 
             if(p.isGoal(currentNode.state)){  //If it is goal, end
-                break;
+                System.out.println("\n" + (++i) + "- End " + currentNode.state);
+                return reconstruct_sol(currentNode);
             } else{  //If not goal, add to explored, and update frontier with the successors function
                 System.out.println(currentNode);
                 explored.add(currentNode);
@@ -46,14 +42,13 @@ public class GraphSearchStrategy implements SearchStrategy {
 
             }
         }
-        System.out.println("\n" + (++i) + "- End " + currentNode.state);
-    return reconstruct_sol(currentNode);
+
+        throw new Exception("Could not find any solution");
     }
     
     
     public Queue<Node> successors (SearchProblem p, Queue<Node> frontier, Node currentnode, List<Node> explored){
         Action[] availableActions = p.actions(p.getInitialState());
-        State st;
         Node nd;
 
         int i=0;
@@ -65,15 +60,15 @@ public class GraphSearchStrategy implements SearchStrategy {
                 nd = new Node(p.result(currentnode.state, acc),currentnode,acc);
 
                 if (!explored.contains(nd)) { //Checks if it has been already explored
-                    if (!frontier.contains(nd)) { //adds the node to the frontier if it was not there
-                        frontier.add(nd);
+                    if (!frontier.contains(nd)) {  //Checks if the node is already in the frontier
+                        frontier.add(nd); //Adds the node to the frontier if it was not there
                     }
                 }
             }
         }
         return frontier;
     }
-    private Node[] reconstruct_sol(Node n){
+    private Node[] reconstruct_sol(Node n){ //Returns the array of the nodes which form the path to the solution
         List<Node> nodelist = new ArrayList<>();
         Node currentNode = n;
 

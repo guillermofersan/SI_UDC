@@ -32,8 +32,9 @@ public class MainEj2a {
 
 
 
-        //System.out.println("\n\n\n" + Arrays.toString(bSearcher.solve(magicSquareproblem1)));
-        System.out.println("\n\n\n" + Arrays.toString(dSearcher.solve(magicSquareproblem2)));
+        System.out.println(Arrays.toString(bSearcher.solve(magicSquareproblem1)));
+        System.out.println("\n\n\n----------------------\n\n\n");
+        System.out.println(Arrays.toString(dSearcher.solve(magicSquareproblem2)));
 
 
     }

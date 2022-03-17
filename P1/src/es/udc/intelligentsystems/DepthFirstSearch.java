@@ -15,36 +15,30 @@ public class DepthFirstSearch implements SearchStrategy{
         State currentState = p.getInitialState();
         frontier.add(new Node(currentState, null, null));
 
-        int i = 1;
+        int created = 0;
 
-        System.out.println((i++) + " - Starting search at " + currentState);
+        System.out.println(" - Starting search at " + currentState);
 
-        while (true){
+        while (!frontier.isEmpty()){
 
-            if (frontier.isEmpty()){ //If you reach nothing in the frontier, you have not found any solution
-                throw new Exception("Could not find any solution");
-            }  else{  //You poll the Queue (frontier), and pick the first element
-                currentNode = frontier.pop();
-            }
-
+            currentNode = frontier.pop();
+            System.out.println(currentNode);
 
             if(p.isGoal(currentNode.state)){  //If it is goal, end
+                System.out.println("\nNumber of expanded nodes = " + explored.size());
+                System.out.println("Number of created  nodes = " + created);
+                System.out.println("- End " + currentNode.state);
 
-                break;
+                return reconstruct_sol(currentNode);
             } else{  //If not goal, add to explored, and update frontier with the successors function
 
                 explored.add(currentNode);
+                int aux = frontier.size();
                 frontier = successors(p, frontier, currentNode, explored);
-
-                if (!frontier.isEmpty()){
-                    currentNode=frontier.peek(); //cambiamos al state siguiente para printearlo
-                    System.out.println(currentNode);
-                }
-
+                created+=frontier.size()-aux; //The amount of nodes created in the successors function is added to the total
             }
         }
-        System.out.println(i + "- End " + currentNode.state);
-        return reconstruct_sol(currentNode);
+        throw new Exception("Could not find any solution"); //if the frontier is empty, no solution was found
     }
 
 
@@ -52,15 +46,11 @@ public class DepthFirstSearch implements SearchStrategy{
         Action[] availableActions = p.actions(currentnode.state);
         Node nd;
 
-        int i=0;
-
         for(Action acc : availableActions){
 
             if(acc.isApplicable(currentnode.state)) { //Looks if the action is applicable to the current state
 
                 nd = new Node(p.result(currentnode.state, acc),currentnode,acc);
-                //System.out.printf(nd.state.toString());
-
                 if (!explored.contains(nd)) { //Checks if it has been already explored
                     if (!frontier.contains(nd)) { //adds the node to the frontier if it was not there
                         frontier.add(nd);
@@ -70,7 +60,9 @@ public class DepthFirstSearch implements SearchStrategy{
         }
         return frontier;
     }
-    private Node[] reconstruct_sol(Node n){
+
+
+    private Node[] reconstruct_sol(Node n){ //Returns the array of the nodes which form the path to the solution
         List<Node> nodelist = new ArrayList<>();
         Node currentNode = n;
 
@@ -82,8 +74,4 @@ public class DepthFirstSearch implements SearchStrategy{
         Collections.reverse(nodelist);
         return nodelist.toArray(new Node[0]);
     }
-
-
-
-
 }

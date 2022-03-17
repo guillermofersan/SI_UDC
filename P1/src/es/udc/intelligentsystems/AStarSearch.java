@@ -16,44 +16,44 @@ public class AStarSearch implements InformedSearchStrategy{
 
         frontier.offer(currentNode);
 
-        int i = 0;
-
-        System.out.println((++i) + " - Starting search at " + currentNode.state);
+        System.out.println(" - Starting search at " + currentNode.state);
 
         while(!frontier.isEmpty()){
             currentNode = frontier.poll();
 
-            if (p.isGoal(currentNode.state)){
+            if (p.isGoal(currentNode.state)){ //If the state is goal, the search ends and state is returned
                 return currentNode.state;
             }
 
             explored.add(currentNode);
             System.out.println(currentNode);
 
-            Action[] availActions = p.actions(currentNode.state);
+            Action[] availActions = p.actions(currentNode.state); //gets all available actions for that state
 
             for (Action acc: availActions) {
 
                 State s = p.result(currentNode.state,acc);
                 Node auxnode = new Node(s, currentNode, acc,h);
-                if (!explored.contains(auxnode)){
-                    if (!frontier.contains(auxnode)){
+                if (!explored.contains(auxnode)){ //Checks if that state was already explored
+                    if (!frontier.contains(auxnode)){ //Checks if that node is already in the frontier, if not, it is added
                         frontier.offer(auxnode);
-
                     } else{
                         Node aux = extractNode(auxnode,frontier);
-                        frontier.remove(aux);
-                        frontier.offer(auxnode);
+                        // if the state was in the frontier, it is compared with the new one, the one whose f is lower gets to stay in the frontier
+                        if(aux.totalcost>auxnode.totalcost){
+                            frontier.remove(aux);
+                            frontier.offer(auxnode);
+                        }
                     }
                 }
             }
         }
-
-
          throw new Exception("Not solution found");
     }
 
     private Node extractNode(Node n, Queue<Node> frontier) throws Exception {
+        // extracts a given node from a queue
+        // Precondition: a node with the same state as the one given is in the queue
         for (Node aux : frontier) {
             if (aux.equals(n)){
                 return aux;
@@ -61,41 +61,4 @@ public class AStarSearch implements InformedSearchStrategy{
         }
         throw new Exception("Error");
     }
-
-
-
-    public List<Node> successors (SearchProblem p, Node currentnode, Heuristic h){
-        System.out.println("Expanding frontier: {");
-        Action[] availableActions = p.actions(currentnode.state);
-
-        Node nd;
-        List<Node> aux = new ArrayList<>();
-
-        int i=0;
-
-        for(Action acc : availableActions){
-            if(acc.isApplicable(currentnode.state)) { //Looks if the action is applicable to the current state
-
-                nd = new Node(p.result(currentnode.state, acc),currentnode,acc,h);
-                aux.add(nd);
-
-                System.out.println("-" + (++i) + " - RESULT:" + currentnode.state + acc + ":" + nd.state);
-            }
-        }
-        System.out.println("\n}");
-        return aux;
-    }
-    private Node[] reconstruct_sol(Node n){
-        List<Node> nodelist = new ArrayList<>();
-        Node currentNode = n;
-
-        while (currentNode!=null){
-            nodelist.add(currentNode);
-            currentNode = currentNode.parent;
-        }
-
-        Collections.reverse(nodelist);
-        return nodelist.toArray(new Node[0]);
-    }
-
 }
